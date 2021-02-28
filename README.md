@@ -60,3 +60,19 @@
     - bf, fft, fir, latnrm, susan, dither, llist
   - Each test generates a synthesizable RTL source file, performance stats, and a waveform which can be used to drive our energy analysis flow
   - Make sure you have deactivated the current virtual environment (proc) before you try E-CGRA or UE-CGRA tests!
+
+## CGRA compiler
+  - We were unable to build LLVM binaries into the docker image due to excessive disk space usage.
+  - If you'd like to try our compiler flow (implemented as an LLVM pass), please make sure you have LLVM tools installed to your $PATH (we used version 8.0)
+  - To build the LLVM pass:
+    - cd /artifact_top/uecgra/llvm-pass-cgra
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make -j12
+    - cd /artifact_top/uecgra/benchmark/<kernel-name>
+    - ./compile.sh
+    - ./run.sh
+  - <kernel-name> is one of the following targets
+    - adpcm, blowfish, dither, fft, fir, latnrm, susan
+  - The output of the LLVM pass is a CGRA configuration json file (can be used in RTL simulation). Please note that you might need to tweak the json output in order to correctly map the configuration onto our CGRA.
