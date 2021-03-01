@@ -9,13 +9,15 @@ in **Section III**.
 You can run the following types of tasks with the models in this
 directory:
 
-- Plot the 
+- Plotting and Visualizing the DFGs
+- Exhaustive Search of Voltage/Frequency Configuration Space
+- Compiler Power-Mapping Pass
 
 Getting Started
 --------------------------------------------------------------------------
 
-To get started, make sure your environment is set up with the
-following python packages:
+Make sure your environment is set up with the following python
+packages:
 
     % mkdir $HOME/venv
     % python3 -m venv $HOME/venv
@@ -28,9 +30,9 @@ following python packages:
 Plotting and Visualizing the DFGs
 --------------------------------------------------------------------------
 
-Then you can plot the DFGs for each kernel, including the toy DFG
-constructed manually in dfgs.py (feel free to build your own DFGs
-here too):
+The first thing you can do is to plot and visualize the DFGs for
+each kernel, including the toy DFG constructed manually in dfgs.py
+(feel free to build your own DFGs here too):
 
     % python plot-bf.py
     % python plot-dither.py
@@ -41,7 +43,7 @@ here too):
 
 For example, the toy kernel looks like this:
 
-![](example-pdfs/toy.pdf)
+![](example-pdfs/toy.png)
 
 Exhaustive Search of Voltage/Frequency Configuration Space
 --------------------------------------------------------------------------
@@ -50,7 +52,9 @@ You can also run an exhaustive search on a DFG, generating a plot
 like the one shown in **Figure 3** of the paper. The
 `task_explore.py` file generates doit tasks for each green dot in
 the space, and you can run all of them with `doit explore` as shown
-below (uses the doit build tool -- https://pydoit.org):
+below. Instead of using make, we use a Python-based build tool
+called doit (https://pydoit.org) to flexibly describe launching
+simulations for the very large space:
 
     % doit list
     % doit list --all
@@ -60,37 +64,39 @@ below (uses the doit build tool -- https://pydoit.org):
 
     % python plot-explore.py
 
-Then you will see a plot that looks like this:
+This will give you a plot that looks like this:
 
-![](example-pdfs/plot-explore.py.pdf)
+![](example-pdfs/plot-explore.py.png)
 
 Compiler Power-Mapping Pass
 --------------------------------------------------------------------------
 
 The compiler power-mapping pass heuristically searches a subset of
-the space for a good performance/energy voltage-frequency
-configuration. This corresponds to the three-phase algorithm
-described in **Section III** of the paper.
+the space for a good performance-energy point. This code corresponds
+to the three-phase algorithm described in **Section III** of the
+paper.
 
-Before we start, make sure the `jsons` symlink can find the CGRA
-configurations in `uecgra-src/benchmark/evaluation`. These JSON CGRA
-configurations describe each PE including the x-y location, the
-operator, sources and destinations for the data streaming in and
-out, and any data passing through the busy PE. The job of this
-power-mapping pass is to add an additional field for the DVFS power
-mode (either rest, nominal, or sprint).
+This pass requires the CGRA configurations found in
+`uecgra-src/benchmark/evaluation`, so make sure the `jsons` symlink
+is pointing there. These JSON CGRA configurations describe all PEs
+including their xy locations, operators, sources and destinations
+for the streaming data in and out, and for any data routing through
+the busy PEs. The specific goal of this power-mapping pass is to add
+an additional field to this configuration json for the assigned DVFS
+power mode (i.e., either rest, nominal, or sprint).
 
 Try running the performance-optimized mapping for the ``toy`` DFG
 like this:
 
     % python map-toy.py
 
-Each run will print out a log of the heuristic iterative process,
-including an analytical power breakdown of the entire CGRA. The
-heuristic pass can be fairly quick (a few seconds) or take tens of
-minutes depending on the size of the DFG. New jsons will be produced
-with the power-mapping modes corresponding to the final
-configuration found in the pass.
+You will see a printed log of each step in the heuristic iterative
+process. You will also see an analytical power breakdown of the
+entire CGRA running that kernel. Note that the heuristic pass can be
+fairly quick (a few seconds) but it may also take tens of minutes
+depending on the size of the DFG. The final new json will be
+produced with the power modes corresponding to the configuration
+found with the best energy-delay product.
 
 You will see an output like this:
 
@@ -109,14 +115,16 @@ You will see an output like this:
     X:           power --                 1.18
     X:            eeff --                 1.08
 
-The numbers produced are only meaningful _relative_ to each other.
-The various numbers are printed for (1) the CGRA with no DVFS, (2)
-the CGRA with newly configured voltage-frequency pairs assigned, and
-(X) the relative factors for the latter over the former. For the toy
-DFG here, the mapping produces a throughput benefit of 1.27x in
-addition to an energy efficiency benefit of 1.08x.
+It is important to note that the numbers we produce here are only
+meaningful _relative_ to each other. In this printout, you will see
+numbers printed for (1) the CGRA with no DVFS, (2) the CGRA with
+newly configured voltage-frequency pairs assigned, and (X) the
+relative factors for the latter over the former.
 
-You can run the performance-optimized mapping passes like this:
+For the toy DFG, the mapping produces a throughput benefit of 1.27x
+in addition to an energy efficiency benefit of 1.08x.
+
+You can run all the performance-optimized mapping passes like this:
 
     % python map-toy.py
     % python map-bf.py
@@ -125,7 +133,7 @@ You can run the performance-optimized mapping passes like this:
     % python map-llist.py
     % python map-susan.py
 
-Or you can run the energy-optimized mapping passes like this (eeff
+Or you can run the energy-optimized mapping passes like this ("eeff"
 stands for energy-efficient):
 
     % python map-toy-eeff.py
@@ -135,8 +143,8 @@ stands for energy-efficient):
     % python map-llist-eeff.py
     % python map-susan-eeff.py
 
-Note -- The analytical results are very similar but do not exactly
-match those of our RTL simulations because our discrete-event
-performance model implements an eager fork but the RTL does not.
+The analytical results are very similar but do not exactly match
+those of our RTL simulations because our discrete-event performance
+model implements an eager fork but the RTL does not.
 
 

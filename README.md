@@ -2,7 +2,7 @@
 -------------------------------------------------------------
 
 ## CGRA analytical model
-  - TBA
+  - See the readme in the analytical modeling and compiler power-mapping pass directory
 
 ## CGRA RTL simulation using provided docker image
   - First, you need to download the pre-built docker image `torng-uecgra-hpca2021.tar.gz`
