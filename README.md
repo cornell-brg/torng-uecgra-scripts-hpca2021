@@ -1,7 +1,10 @@
-Ultra-Elastic CGRA Paper Artifact
+Paper Artifact - Ultra-Elastic CGRAs for Irregular Loop Specialization
 ==========================================================================
 
-**Abstract**: Reconfigurable accelerator fabrics, including
+- Authors : Christopher Torng, Peitian Pan, Yanghui Ou, Cheng Tan, and Christopher Batten
+- Contact : clt67@cornell.edu and pp482@cornell.edu
+
+**Abstract** - Reconfigurable accelerator fabrics, including
 coarse-grain reconfigurable arrays (CGRAs), have experienced a
 resurgence in interest because they allow fast-paced software
 algorithm development to continue evolving post-fabrication. CGRAs
@@ -37,13 +40,11 @@ overhead compared to traditional inelastic and elastic CGRAs, while
 also improving performance (1.35–3.38×) or energy efficiency (up to
 1.53×) compared to a RISC-V core.
 
-**Artifact**: In this repository we provide the analytical model and
-a docker image that contains the compiler pass and RTL source code
-we used in the paper. To play with the analytical modeling and
-compiler power-mapping pass, refer to the README.md file under the
-`uecgra-analytical-model` directory. To run the compiler pass and
-RTL simulations, refer to the README.md file under the
-`uecgra-docker-image` directory for detailed instructions.
+**Artifact** - In this repository we have released our analytical
+performance and energy model (used for both analytical design-space
+exploration and for our compiler power-mapping pass). We have also
+released a docker image with our CGRA compiler and the RTL source
+code we used in the paper.
 
 Directory Organization
 --------------------------------------------------------------------------
