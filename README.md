@@ -1,78 +1,47 @@
-# Ultra-Elastic CGRA Paper Artifact
--------------------------------------------------------------
+Ultra-Elastic CGRA Paper Artifact
+==========================================================================
 
-## CGRA analytical model
-  - See the readme in the analytical modeling and compiler power-mapping pass directory
+Reconfigurable accelerator fabrics, including coarse-grain reconfigurable
+arrays (CGRAs), have experienced a resurgence in interest because they
+allow fast-paced software algorithm development to continue evolving
+post-fabrication. CGRAs traditionally target regular workloads with
+data-levelparallelism (e.g., neural networks, image processing), but once
+integrated into an SoC they remain idle and unused for irregular
+workloads. An emerging trend towards repurposing these idle resources
+raises important questions for how to efficiently map and execute
+general-purpose loops which may have irregular memory accesses, irregular
+control flow, and inter-iteration loop dependencies.  Recent work has
+increasingly leveraged elasticity in CGRAs to mitigate the first two
+challenges, but elasticity alone does not address inter-iteration loop
+dependencies which can easily bottleneck overall performance. In this
+paper, we address all three challenges for irregular loop specialization
+and propose ultra-elastic CGRAs (UE-CGRAs), a novel elastic CGRA that
+accelerates true-dependency bottlenecks and saves energy in irregular
+loops by overcoming traditional VLSI challenges. UE-CGRAs allow
+configurable fine-grain dynamic voltage and frequency scaling (DVFS) for
+each of potentially hundreds of tiny processing elements (PEs) in the
+CGRA, enabling chains of connected PEs to “rest” at lower voltages and
+frequencies to save energy, while other chains of connected PEs can
+“sprint” at higher voltages and frequencies to accelerate through
+true-dependency bottlenecks. UE-CGRAs rely on a novel ratiochronous
+clocking scheme carefully overlaid on the inter-PE elastic interconnect to
+enable low-latency crossings while remaining fully verifiable with
+commercial static timing analysis tools. We present the UE-CGRA analytical
+model, compiler, architectural template, and VLSI circuitry, and we
+demonstrate how UE-CGRAs can specialize for irregular loops and improve
+performance (1.42–1.50×) or energy efficiency (1.24–2.32×) with reasonable
+area overhead compared to traditional inelastic and elastic CGRAs, while
+also improving performance (1.35–3.38×) or energy efficiency (up to 1.53×)
+compared to a RISC-V core.
 
-## CGRA RTL simulation using provided docker image
-  - First, you need to download the pre-built docker image `torng-uecgra-hpca2021.tar.gz`
-    - Download from https://doi.org/10.5281/zenodo.4568992
-  - Then you need the following two commands to run a docker container
-    - docker load --input torng-uecgra-hpca2021.tar.gz
-    - docker run -it --cap-add SYS_ADMIN uecgra-src /bin/bash
-  - Once you are inside the image, source the bashrc script:
-    - source /root/.bashrc
+In this repository we provide the analytical model and a docker image that
+contains the compiler pass and RTL source code we used in the paper. To
+play with the analytical modeling and compiler power-mapping pass, refer
+to the README.md file under the `uecgra-analytical-model` directory. To
+run the compiler pass and RTL simulations, refer to the README.md file
+under the `uecgra-docker-image` directory for detailed instructions.
 
-### Running Elastic CGRA tests
-  - Make sure you are inside the docker image and have sourced /root/.bashrc
-    - workon ecgra
-    - cd /artifact_top/uecgra
-    - mkdir -p build-ecgra
-    - cd build-ecgra
-    - pytest ../src/cgra/test/StaticCGRA_test.py::StaticCGRA_Trans_Tests::test_[test-name] -vs --tb=short --clock-time=5.0
-    - deactivate
-  - [test-name] is of the following targets
-    - llist, dither, susan, fft, bf
-  - Each test generates a synthesizable RTL source file, performance stats, and a waveform which can be used to drive our energy analysis flow
-  - Make sure you have deactivated the current virtual environment (ecgra) before you try UE-CGRA or processor tests!
-
-### Running Ultra-Elastic CGRA tests
-  - Make sure you are inside the docker image and have sourced /root/.bashrc
-    - workon uecgra
-    - cd /artifact_top/uecgra
-    - mkdir -p build-uecgra
-    - cd build-uecgra
-    - pytest ../src/cgra/test/StaticCGRA_RGALS_test.py -vs --tb=short -k [test-name].json --clock-time=5.0
-    - deactivate
-  - [test-name] is of format [kernel-name][suffix]
-    - [kernel-name] is one of the following targets
-      - llist, dither, susan, fft, bf
-    - [suffix] is one of the following targets
-      - [empty]: no suffix -- run the test with all PEs and SRAMs at canonical voltage and frequency
-      - _dvfs: performance-optimized configuration; run the test with a configuration that is optimized for better throughput
-      - _dvfs_eeff: energy-optimized configuration; run the test with a configuration that is optimized for better energy efficiency
-  - Example:
-    - `-k fir.json`: run the FIR kernel with all PEs and SRAMs at canonical VF
-    - `-k dither_dvfs.json`: run the dither kernel with a performance-optimized configuration
-    - `-k llist_dvfs_eeff.json`: run the llist kernel with an energy-optimized configuration
-  - Each test generates a synthesizable RTL source file, performance stats, and a waveform which can be used to drive our energy analysis flow
-  - Make sure you have deactivated the current virtual environment (uecgra) before you try E-CGRA or processor tests!
-
-### Running RISCV processor tests
-  - The docker image also includes the pre-compiled binaries of the kernels used in this paper
-  - Make sure you are inside the docker image and have sourced /root/.bashrc
-    - workon proc
-    - cd /artifact_top/uecgra
-    - mkdir -p build-proc
-    - cd build-proc
-    - ../proc-sim/mcore-sim-elf --ncores 1 --single-cycle-mul --stats ../app/build-riscv/cgra_ubmark-[test-name]
-  - [test-name] is one of the following targets
-    - bf, fft, fir, latnrm, susan, dither, llist
-  - Each test generates a synthesizable RTL source file, performance stats, and a waveform which can be used to drive our energy analysis flow
-  - Make sure you have deactivated the current virtual environment (proc) before you try E-CGRA or UE-CGRA tests!
-
-## CGRA compiler
-  - We were unable to build LLVM binaries into the docker image due to excessive disk space usage.
-  - If you'd like to try our compiler flow (implemented as an LLVM pass), please make sure you have LLVM tools installed to your $PATH (we used version 8.0)
-  - To build the LLVM pass:
-    - cd /artifact_top/uecgra/llvm-pass-cgra
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make -j12
-    - cd /artifact_top/uecgra/benchmark/[kernel-name]
-    - ./compile.sh
-    - ./run.sh
-  - [kernel-name] is one of the following targets
-    - adpcm, blowfish, dither, fft, fir, latnrm, susan
-  - The output of the LLVM pass is a CGRA configuration json file (can be used in RTL simulation). Please note that you might need to tweak the json output in order to correctly map the configuration onto our CGRA.
+Directory Organization
+--------------------------------------------------------------------------
+  - `uecgra-analytical-model`: scripts for the UE-CGRA analytical modeling and compiler power-mapping pass
+  - `uecgra-docker-image`: instructions on how to run our CGRA compiler pass and RTL simulations
