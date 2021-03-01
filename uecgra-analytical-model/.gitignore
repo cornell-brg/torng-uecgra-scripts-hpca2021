@@ -1,0 +1,15 @@
+.DS_Store
+*.pyc
+*.dot
+*.pdf
+.doit.db
+
+# Intermediate power mapping results
+
+*.json.final.nodes
+*.json.pre.groups
+*.json.pre.nodes
+*.json.final.eeff.nodes
+*.json.pre.eeff.groups
+*.json.pre.eeff.nodes
+
