@@ -43,7 +43,7 @@ each kernel, including the toy DFG constructed manually in dfgs.py
 
 For example, the toy kernel looks like this:
 
-![](example-pdfs/toy.png)
+<img width='400px' src='example-pdfs/toy.png'>
 
 Exhaustive Search of Voltage/Frequency Configuration Space
 --------------------------------------------------------------------------
@@ -66,7 +66,7 @@ simulations for the very large space:
 
 This will give you a plot that looks like this:
 
-![](example-pdfs/plot-explore.py.png)
+<img width='400px' src='example-pdfs/plot-explore.py.png'>
 
 Compiler Power-Mapping Pass
 --------------------------------------------------------------------------
