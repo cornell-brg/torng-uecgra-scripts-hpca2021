@@ -2,7 +2,8 @@ Paper Artifact - Ultra-Elastic CGRAs for Irregular Loop Specialization
 ==========================================================================
 
 - Authors : Christopher Torng, Peitian Pan, Yanghui Ou, Cheng Tan, and Christopher Batten
-- Contact : clt67@cornell.edu and pp482@cornell.edu
+- Contact : clt67@cornell.edu, pp482@cornell.edu,
+  cbatten@cornell.edu
 
 **Abstract** - Reconfigurable accelerator fabrics, including
 coarse-grain reconfigurable arrays (CGRAs), have experienced a
