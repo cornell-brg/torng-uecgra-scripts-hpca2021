@@ -1,0 +1,268 @@
+[
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "N",
+        "x": 2,
+        "y": 0
+    },
+    {
+        "dst": [
+            "N",
+            "E"
+        ],
+        "dvfs": "nominal",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "N",
+        "x": 3,
+        "y": 0
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "W",
+        "src_b": "self",
+        "x": 4,
+        "y": 0
+    },
+    {
+        "bps_dst": [
+            "N"
+        ],
+        "bps_src": "S",
+        "dst_false": "S",
+        "dst_true": "none",
+        "dvfs": "nominal",
+        "op": "br",
+        "src_bool": "E",
+        "src_data": "N",
+        "x": 2,
+        "y": 1
+    },
+    {
+        "bps_dst": [
+            "S"
+        ],
+        "bps_src": "N",
+        "dst": [
+            "W",
+            "E"
+        ],
+        "dvfs": "nominal",
+        "op": "eq",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 3,
+        "y": 1
+    },
+    {
+        "dst_false": "none",
+        "dst_true": "E",
+        "dvfs": "rest",
+        "op": "br",
+        "src_bool": "W",
+        "src_data": "S",
+        "x": 4,
+        "y": 1
+    },
+    {
+        "dst": [
+            "E"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "W",
+        "src_b": "self",
+        "x": 5,
+        "y": 1
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "W",
+        "src_b": "self",
+        "x": 6,
+        "y": 1
+    },
+    {
+        "bps_dst": [
+            "E"
+        ],
+        "bps_src": "S",
+        "dst": [
+            "S"
+        ],
+        "dvfs": "nominal",
+        "op": "add",
+        "src_a": "E",
+        "src_b": "self",
+        "x": 2,
+        "y": 2
+    },
+    {
+        "dst": [
+            "W",
+            "E",
+            "S"
+        ],
+        "dvfs": "nominal",
+        "op": "phi",
+        "src_a": "W",
+        "src_b": "self",
+        "x": 3,
+        "y": 2
+    },
+    {
+        "dst": [
+            "E"
+        ],
+        "dvfs": "rest",
+        "op": "eq",
+        "src_a": "W",
+        "src_b": "self",
+        "x": 4,
+        "y": 2
+    },
+    {
+        "dst_false": "none",
+        "dst_true": "N",
+        "dvfs": "rest",
+        "op": "br",
+        "src_bool": "W",
+        "src_data": "self",
+        "x": 5,
+        "y": 2
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 6,
+        "y": 2
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 5,
+        "y": 3
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 6,
+        "y": 3
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 5,
+        "y": 4
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 6,
+        "y": 4
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 5,
+        "y": 5
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 6,
+        "y": 5
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 5,
+        "y": 6
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 6,
+        "y": 6
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 5,
+        "y": 7
+    },
+    {
+        "dst": [
+            "N"
+        ],
+        "dvfs": "rest",
+        "op": "cp0",
+        "src_a": "S",
+        "src_b": "self",
+        "x": 6,
+        "y": 7
+    }
+]
