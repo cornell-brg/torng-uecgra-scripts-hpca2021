@@ -22,7 +22,7 @@ and RTL simulation described in the paper.
 
 ## CGRA RTL simulation using provided docker image
   - First, you need to download the pre-built docker image `torng-uecgra-hpca2021.tar.gz`
-    - Download from https://doi.org/10.5281/zenodo.4568992
+    - Download from https://doi.org/10.5281/zenodo.4571642
   - Then you need the following two commands to run a docker container
     - docker load --input torng-uecgra-hpca2021.tar.gz
     - docker run -it --cap-add SYS_ADMIN uecgra-src /bin/bash
