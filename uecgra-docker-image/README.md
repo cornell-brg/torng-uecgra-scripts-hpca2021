@@ -22,7 +22,7 @@ and RTL simulation described in the paper.
 
 ## CGRA RTL simulation using provided docker image
   - First, you need to download the pre-built docker image `torng-uecgra-hpca2021.tar.gz`
-    - Download from https://doi.org/10.5281/zenodo.4571642
+    - Download from https://doi.org/10.5281/zenodo.4589143 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4589143.svg)](https://doi.org/10.5281/zenodo.4589143)
   - Then you need the following two commands to run a docker container
     - docker load --input torng-uecgra-hpca2021.tar.gz
     - docker run -it --cap-add SYS_ADMIN uecgra-src /bin/bash
@@ -76,3 +76,65 @@ and RTL simulation described in the paper.
     - bf, fft, fir, latnrm, susan, dither, llist
   - Each test generates a synthesizable RTL source file, performance stats, and a waveform which can be used to drive our energy analysis flow
   - Make sure you have deactivated the current virtual environment (proc) before you try E-CGRA or UE-CGRA tests!
+
+### Expected System Efficiency
+
+The docker image does not contain any technology-specific
+information or backend physical design scripts due to our NDAs.
+However, if you are able to source your own backend physical design
+tools and scripts, we provide numbers for the system efficiency you
+should expect.
+
+We provide our system efficiency numbers for FFT in GOPS/W, along
+with our assumptions and caveats. We have chosen not to include the
+host system and main memory in our calculation, so please keep
+this in mind.
+
+For reference, here is the DFG for FFT with 28 operations and the
+critical sequence of DFG nodes highlighted in red:
+
+![](dfg-fft.jpg)
+
+**System Efficiency for FFT (array only)**
+
+- Performance -- 1.75 GOPS
+    - FFT inner loop iterates and executes a total of 28000 ops
+    - Execution time is 15980e-9 seconds
+    - Performance is 28000/15980e-9 = 1.75 GOPS
+    - OP definition
+        - All LLVM primitives that can be mapped to an elastic PE
+        - E.g., load, store, add, mul, branch, equality, phi
+
+- Power -- 16.71 mW
+    - Breakdown
+        - PEs and their local clock networks -- 14.01 mW (83.8%)
+        - SRAMs -- 1.78 mW (10.7%)
+        - Global clock network -- 0.86 mW (5.1%)
+        - Total -- 16.71 mW
+
+- Operating Conditions
+    - TSMC 28nm, 0.9V, SVT only (no HVT/LVT/ULVT), all typical corner
+
+- Final System Efficiency (all operations) -- 104.9 GOPS/W
+    - 1.75 GOPS / 16.71 mW = 104.9 GOPS/W
+
+- Final System Efficiency (core operations only) -- 37.5 GOPS/W
+    - Core operations definition
+        - These are the core arithmetic operations that would count towards FLOPS
+        - In the FFT DFG, there are ten core operations after the four loads that execute per inner loop iteration (4 multiplies, 3 add, 3 sub).
+        - Therefore the final system efficiency will be 10/28ths of the GOPS/W (all operations).
+    - 10 core ops / 28 total ops * 104.9 GOPS/W = 37.5 GOPS/W
+
+- Caveats
+    - No PE power gating was done with FFT, because almost all PEs were needed for routing (63/64 PEs)
+    - No hierarchical clock gating was done either, for the same reason
+    - No DVFS mechanisms at play at all (no ultra elastic)
+    - 32-bit datapath
+    - All numbers are post-pnr
+    - Array is 44% utilized (28/64 PEs)
+        - Unrolling to utilize the remaining PEs is not expected to change the GOPS/W much (beyond a few percent)
+    - Does NOT include main memory or the host core, and data is assumed preloaded into SRAMs
+    - **Eager fork caveat** -- The throughput of FFT on our RTL is 12 cycles/iteration (1.75 GOPS). However, the throughput of FFT on the UE-CGRA analytical model is 4 cycles/iteration, which makes more sense because there are four nodes in the critical DFG cycle (5.25 GOPS). The discrepancy arises because our analytical model assumes support for eager forks as described in "Elastic CGRAs" FPGA 2013 [21], but our RTL does not yet support this feature, leading to a mismatch. We expect that RTL support for eager forking will recover this unintended performance loss. Note that this mismatch has minimal impact on the GOPS/W, since performance and power would both increase by a factor of three. Also note that the conclusions of the paper do not change.
+
+
+
