@@ -1,6 +1,7 @@
 Paper Artifact - Ultra-Elastic CGRAs for Irregular Loop Specialization
 ==========================================================================
 
+- Paper   : [Link](https://doi.org/10.1109/HPCA51647.2021.00042)
 - Authors : Christopher Torng, Peitian Pan, Yanghui Ou, Cheng Tan, and Christopher Batten
 - Contact : clt67@cornell.edu, pp482@cornell.edu,
   cbatten@cornell.edu
